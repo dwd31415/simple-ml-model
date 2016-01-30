@@ -3,6 +3,11 @@ lazy-learning.jl
 Copyright 2016 Adrian Dawid
 =#
 
+module LazyLearning
+
+export lazy_approximate
+export lazy_approximate_normalized
+
 function gen_gaussian_kernel(width)
     return (x -> (1/(sqrt(2*pi)*width)) * exp(-(x^2/(2*width^2))))
 end
@@ -31,4 +36,6 @@ function lazy_approximate_normalized(samples_in,samples_out,kernel_width,x)
         output += samples_out[i] * local_influence
     end
     return output/overall_influence
+end
+
 end

@@ -1,4 +1,6 @@
 using Gadfly
+include("lazy_learning.jl")
+using LazyLearning
 
 data = ([-4,0,4],[-2,5,2])
 f1 = x -> lazy_approximate(data[1],data[2],1,x)
