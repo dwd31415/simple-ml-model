@@ -1,0 +1,6 @@
+language: julia
+julia:
+  - 0.4.3
+
+script:
+  - julia test.jl
