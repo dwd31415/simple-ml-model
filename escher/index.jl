@@ -28,6 +28,7 @@ end
 # Escher main function is automatically called by the escher_serve function
 function main(window)
     push!(window.assets, "widgets")
+    push!(window.assets, "tex")
 
     input = Signal(Dict())
     s = Escher.sampler()
@@ -43,7 +44,19 @@ function main(window)
     map(input) do dict
         vbox(hbox(paper(3,Escher.pad(4em,
         vbox(title(2, "Lazy Learning Function Approximation"),
-        intent(s, form) >>> input,
+	vskip(1em),
+	plaintext("This webapp approximates a polynomial with lazy learning methods, the approximated functions are given by:"),
+        vskip(3em),
+	tex("""
+		f_{2}(x) = \\sum_{x \\in X}{\\sigma(x) \\cdot \\sigma(0)^{-1} \\cdot f(x)}
+	"""),
+	vskip(1em),
+	tex("""
+f_{3}(x) = \\frac{1}{\\sum_{x \\in X} \\sigma(x) \\cdot \\sigma(0)^{-1}} \\cdot \\sum_{x \\in X}{\\sigma(x) \\cdot \\sigma(0)^{-1} \\cdot f(x)}
+	"""),
+	vskip(3em),
+	plaintext("where sigma is a gaussian kernel."),
+	intent(s, form) >>> input,
         vskip(2em),
         draw_plot(get(dict,:params,"1 2"),get(dict,:w,100)/100)
     )))) |> Escher.pad(5em))
