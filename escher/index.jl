@@ -3,22 +3,7 @@ include("../polynomial.jl")
 using LazyLearning
 using Polynomial
 using Gadfly
-
-# Escher main function is automatically called by the escher_serve function
-function main(window)
-    # Load HTML dependencies related to the slider
-    push!(window.assets, "widgets")
-
-    iterations = Input(5) # The number of iterations to show
-    connected_slider = subscribe(slider(0:200, value=5), iterations)
-
-    lift(iterations) do n
-        vbox(
-            connected_slider,
-            draw_plot(n/100)
-        )
-    end
-end
+using Compose
 
 function draw_plot(width)
     # Define the parameters for the polynomial
@@ -38,4 +23,20 @@ function draw_plot(width)
 
     #Plot all of the functions
     plot(layer([f,f_approx,f_approx2],-100,100))
+end
+
+# Escher main function is automatically called by the escher_serve function
+function main(window)
+    push!(window.assets, "widgets")
+
+    iterᵗ=Signal(0)
+
+    vbox(hbox(paper(3,Escher.pad(4em,vbox(title(2, "Lazy Learning Function Approximation"),
+        vskip(3em),
+        hbox("Kernel width(Scale: 100): ", slider(10:200) >>> iterᵗ),
+        vskip(3em),
+        map(iterᵗ) do iter
+            draw_plot(iter/100)
+        end
+    )))) |> Escher.pad(5em))
 end
