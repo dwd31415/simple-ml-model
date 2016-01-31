@@ -5,9 +5,9 @@ using Polynomial
 using Gadfly
 using Compose
 
-function draw_plot(width)
+function draw_plot(params_string,width)
     # Define the parameters for the polynomial
-    params_string = "3 0.5 2.4 -1.2"
+    # params_string = "3 0.5 2.4 -1.2"
     params = map(s -> parse(Float64,s),split(params_string))
 
     # Define some sample data
@@ -29,14 +29,21 @@ end
 function main(window)
     push!(window.assets, "widgets")
 
-    iterᵗ=Signal(0)
+    input = Signal(Dict())
+    s = Escher.sampler()
+    form = vbox(
+        vskip(3em),
+        watch!(s, :params,textinput("", label="Function Paramerters(Whitespace sperated)")),
+        hbox("Kernel width(Scale: 100): ", watch!(s,:w,slider(10:200)),
+        vskip(3em),
+        trigger!(s,:update,Button("Update"))))
 
-    vbox(hbox(paper(3,Escher.pad(4em,vbox(title(2, "Lazy Learning Function Approximation"),
-        vskip(3em),
-        hbox("Kernel width(Scale: 100): ", slider(10:200) >>> iterᵗ),
-        vskip(3em),
-        map(iterᵗ) do iter
-            draw_plot(iter/100)
-        end
+    map(inp) do dict
+        vbox(hbox(paper(3,Escher.pad(4em,
+        vbox(title(2, "Lazy Learning Function Approximation"),
+        intent(s, form) >>> inp,
+        vskip(2em),
+        draw_plot(dict[:params],dict[:w]/100)
     )))) |> Escher.pad(5em))
+    end
 end
