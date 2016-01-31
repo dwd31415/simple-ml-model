@@ -33,17 +33,19 @@ function main(window)
     s = Escher.sampler()
     form = vbox(
         vskip(3em),
-        watch!(s, :params,textinput("", label="Function Paramerters(Whitespace sperated)")),
-        hbox("Kernel width(Scale: 100): ", watch!(s,:w,slider(10:200)),
+        watch!(s, :params,textinput("1 2", label="Function Paramerters(Whitespace sperated)")),
+	hskip(4em),
+        hbox("Kernel width(Scale 100): ", watch!(s,:w,slider(10:200))) |> packacross(center),
+	hskip(4em),
         vskip(3em),
-        trigger!(s,:update,Button("Update"))))
+        trigger!(s,:update, button("Update")))
 
-    map(inp) do dict
+    map(input) do dict
         vbox(hbox(paper(3,Escher.pad(4em,
         vbox(title(2, "Lazy Learning Function Approximation"),
-        intent(s, form) >>> inp,
+        intent(s, form) >>> input,
         vskip(2em),
-        draw_plot(dict[:params],dict[:w]/100)
+        draw_plot(get(dict,:params,"1 2"),get(dict,:w,100)/100)
     )))) |> Escher.pad(5em))
     end
 end
